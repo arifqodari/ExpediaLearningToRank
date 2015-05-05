@@ -12,7 +12,7 @@ def read_data(filename):
     so we need to read it in chunks
     """
 
-    size_in_chunk = 200000
+    size_in_chunk = 300000
     return pd.read_csv(filename, dtype=object, chunksize=size_in_chunk)
 
 def read_training_data():
