@@ -6,14 +6,18 @@ from setting import *
 from sklearn.ensemble import *
 
 
-def read_data(filename):
+def read_data(filename,chunked = True):
     """
     we don't have enough memory to load a big file
     so we need to read it in chunks
+    However, for some data preprocessing, no chunk will be easier.
     """
 
-    size_in_chunk = 300000
-    return pd.read_csv(filename, dtype=object, chunksize=size_in_chunk)
+    if !chunked:
+        return pd.read_csv(filename, dtype=object)
+    else:
+        size_in_chunk = 300000
+        return pd.read_csv(filename, dtype=object, chunksize=size_in_chunk)
 
 def read_training_data():
     """
