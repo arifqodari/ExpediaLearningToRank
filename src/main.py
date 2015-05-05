@@ -26,6 +26,12 @@ def read_training_data(chunked = True):
 
     return read_data(TRAIN_DATA,chunked)
 
+def read_kaggle_training_data(chunked = True):
+    """
+    read kaggle training data
+    """
+    return read_data(KAGGLE_TRAIN_DATA,chunked)
+
 def read_test_data(chunked = True):
     """
     read test data
