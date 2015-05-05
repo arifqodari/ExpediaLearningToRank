@@ -33,24 +33,6 @@ def read_test_data(chunked = True):
 
     return read_data(TEST_DATA, chunked)
 
-def write_into_file(df,filename):
-    """
-    write processed data into file.
-    """
-    return df.to_csv(filename,sep = '\t')
-
-def write_training_data(df):
-    """
-    Write training data into file
-    """
-    return write_into_file(df,PROCESSED_TRAIN_DATA)
-
-def write_test_data(df):
-    """
-    Write test data into file
-    """
-    return write_into_file(df,PROCESSED_TEST_DATA)
-
 def preprocessing(df):
     """
     preprocessing data
