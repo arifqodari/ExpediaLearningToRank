@@ -13,6 +13,9 @@ def read_data(filename, chunked):
     However, for some data preprocessing, no chunk will be easier.
     """
 
+    if chunked is None:
+        chunked = 300000
+
     if chunked:
         return pd.read_csv(filename, dtype=object, chunksize=chunked)
     else:
@@ -24,9 +27,6 @@ def read_training_data(chunked=None):
     read training data
     """
 
-    if chunked is None:
-        chunked = 300000
-
     return read_data(TRAIN_DATA, chunked)
 
 def read_kaggle_training_data(chunked = None):
@@ -34,18 +34,12 @@ def read_kaggle_training_data(chunked = None):
     read kaggle training data
     """
 
-    if chunked is None:
-        chunked = 300000
-
     return read_data(KAGGLE_TRAIN_DATA,chunked)
 
 def read_test_data(chunked = None):
     """
     read test data
     """
-
-    if chunked is None:
-        chunked = 300000
 
     return read_data(TEST_DATA, chunked)
 
