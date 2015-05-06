@@ -8,18 +8,20 @@ if __name__ == "__main__":
     kaggle_training_data = read_kaggle_training_data()
 
     indices = list()
+    clicked = list()
     booked = list()
 
     for chunk_data in kaggle_training_data:
         # Make a unique key (the error rate is less than 0.05%)
         comb= data_chunk['date_time'].map(str)+ data_chunk['prop_country_id'].map(str)+ data_chunk['prop_id'].map(str)
         indices.append(comb)
+        clicked.append(data_chunk.click_bool)
         booked.append(data_chunk.booking_bool)
 
     # Piece together all fragments of the data into a data frame
-    indexed_kaggle_training_data = pd.concat([pd.concat(indices),pd.concat(booked)],axis=1)
+    indexed_kaggle_training_data = pd.concat([pd.concat(indices),pd.concat(clicked),pd.concat(booked)],axis=1)
     # Set the column names
-    indexed_kaggle_training_data.columns = ['key','booking_bool']
+    indexed_kaggle_training_data.columns = ['key','click_bool','booking_bool']
 
     # Read the test data, of the assignment, not kaggle, here I don't CHUNK the data.
     test_data = read_test_data(chunked = True)
