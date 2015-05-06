@@ -44,6 +44,9 @@ def read_test_data(chunked = None):
     read test data
     """
 
+    if chunked is None:
+        chunked = 300000
+
     return read_data(TEST_DATA, chunked)
 
 def preprocessing(df):
