@@ -103,7 +103,7 @@ def preprocessing(df,type = 1):
         to_delete.extend(['click_bool','gross_bookings_usd'])
 
     df.drop(to_delete, axis = 1, inplace = True)
-
+    print "The preprocessing task is done."
     # attributes = list(df.columns)
     # attributes.remove('srch_id')
     # attributes.remove('date_time')
