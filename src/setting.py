@@ -8,3 +8,7 @@ KAGGLE_TRAIN_DATA = folder + 'processed_training_data.csv'
 
 # specify model file name
 MODEL_FILENAME = 'model.pickle'
+
+# Specify precess data name
+PROCESSED_TRAIN = folder +'processed_training_data'
+PROCESSED_TEST = folder +'proccessed_test'
