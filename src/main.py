@@ -51,6 +51,25 @@ def preprocessing(df):
     # treatment for missing values
     df.orig_destination_distance.fillna(-10,inplace = True)
 
+    # Remove srch_id and date_time
+    df.drop(['srch_id','date_time'],axis = 1, inplace = True)
+
+    # Replace NULL with -10 in place
+    df.visitor_hist_starrating.fillna(-10,inplace = True)
+
+    df.visitor_hist_adr_usd.fillna(-10,inplace = True)
+
+    df.prop_review_score.fillna(-10, inplace = True)
+
+    # Replace NULL of competitiors with 0 in place
+    for i in range(1,9):
+        rate = 'comp' + str(i) + '_rate'
+        inv = 'comp' + str(i) + '_inv'
+        diff = 'comp' + str(i) + '_rate_percent_diff'
+        df[rate].fillna(0,inplace = True)
+        df[inv].fillna(0,inplace = True)
+        df[diff].fillna(0,inplace = True)
+
     # attribute selection
     attributes = list(df.columns)
     attributes.remove('srch_id')
