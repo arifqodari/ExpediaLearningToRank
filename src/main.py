@@ -11,6 +11,7 @@ def read_data(filename, chunked):
     we don't have enough memory to load a big file
     so we need to read it in chunks
     However, for some data preprocessing, no chunk will be easier.
+    chunked = False, to disable chunking data
     """
 
     if chunked is None:
@@ -43,9 +44,14 @@ def read_test_data(chunked = None):
 
     return read_data(TEST_DATA, chunked)
 
-def preprocessing(df):
+def preprocessing(df,type = 1):
     """
     preprocessing data
+    Here we only drop features and transform NULL values
+    After preprocessing:
+        training data (type = 1): contains only training and target
+        test data (type  = 0): contains only training
+    No return values
     """
 
     # treatment for missing values
@@ -61,29 +67,69 @@ def preprocessing(df):
 
     df.prop_review_score.fillna(-10, inplace = True)
 
+    # Replace a value less than the minimum of training + test data
+    df.srch_query_affinity_score.fillna(-350, inplace = True)
+
+    df.prop_location_score2.fillna(0, inplace = True)
+
     # Replace NULL of competitiors with 0 in place
+    # for i in range(1,9):
+    #     rate = 'comp' + str(i) + '_rate'
+    #     inv = 'comp' + str(i) + '_inv'
+    #     diff = 'comp' + str(i) + '_rate_percent_diff'
+    #     df[rate].fillna(0,inplace = True)
+    #     df[inv].fillna(0,inplace = True)
+    #     df[diff].fillna(0,inplace = True)
+
+    # Remove all categorical attribute
+    to_delete = [
+        'visitor_location_country_id',
+        'visitor_hist_adr_usd',
+        'prop_country_id',
+        'prop_id',
+        'prop_brand_bool',
+        'position',
+        'promotion_flag',
+        'srch_destination_id',
+        'random_bool'
+    ]
     for i in range(1,9):
         rate = 'comp' + str(i) + '_rate'
         inv = 'comp' + str(i) + '_inv'
         diff = 'comp' + str(i) + '_rate_percent_diff'
-        df[rate].fillna(0,inplace = True)
-        df[inv].fillna(0,inplace = True)
-        df[diff].fillna(0,inplace = True)
+        to_delete.extend([rate,inv,diff])
 
-    # attribute selection
-    attributes = list(df.columns)
-    attributes.remove('srch_id')
-    attributes.remove('date_time')
-    attributes.remove('position')
-    attributes.remove('click_bool')
-    attributes.remove('gross_booking_usd')
-    attributes.remove('booking_bool')
+    if type == 1:
+        to_delete.extend(['click_bool','gross_bookings_usd'])
+
+    df.drop(to_delete, axis = 1, inplace = True)
+
+    # attributes = list(df.columns)
+    # attributes.remove('srch_id')
+    # attributes.remove('date_time')
+    # attributes.remove('position')
+    # attributes.remove('click_bool')
+    # attributes.remove('gross_booking_usd')
+    # attributes.remove('booking_bool')
 
     # create features matrix and target array
-    X = df[attributes].values
-    y = df['booking_bool'].values
+    # X = df[attributes].values
+    # y = df['booking_bool'].values
 
-    return X, y
+
+def save_data(tfr, type = 1):
+    """
+    save data into file
+    type = 1: training data 
+    type = 0: test data
+    tfr is short for text file reader
+    """
+    if type == 1:
+        output = open(PROCESSED_TRAIN,'w')
+    else:
+        output = open(PROCESSED_TEST,'w')
+
+    pickle.dump(tfr,output)
 
 def save_model(clf):
     """
