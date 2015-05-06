@@ -48,15 +48,19 @@ def preprocessing(df):
     preprocessing data
     """
 
-    # replace missing values with -1
-    df.fillna(-1, inplace=True)
+    # treatment for missing values
+    df.orig_destination_distance.fillna(-10,inplace = True)
 
     # attribute selection
     attributes = list(df.columns)
+    attributes.remove('srch_id')
     attributes.remove('date_time')
+    attributes.remove('position')
+    attributes.remove('click_bool')
+    attributes.remove('gross_booking_usd')
     attributes.remove('booking_bool')
 
-    # create data and target matrix
+    # create features matrix and target array
     X = df[attributes].values
     y = df['booking_bool'].values
 
