@@ -7,8 +7,11 @@ TEST_DATA = folder + 'test_set_VU_DM_2014.csv'
 KAGGLE_TRAIN_DATA = folder + 'processed_training_data.csv'
 
 # specify model file name
-MODEL_FILENAME = folder + 'model.pickle'
+MODEL_FILENAME = 'model.pickle'
 
-# Specify precess data name
-PROCESSED_TRAIN = folder +'processed_training_data'
-PROCESSED_TEST = folder +'proccessed_test'
+# Specify processed data name
+PROCESSED_TRAIN = folder +'processed_training_data.csv'
+PROCESSED_TEST = folder +'proccessed_test_data.csv'
+
+# Sepcify sampled data name
+SAMPLED_TRAIN = folder + 'sampled_training_data'
