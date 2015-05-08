@@ -43,7 +43,7 @@ def read_data(filename, chunked):
         'promotion_flag': 'int8',
         'prop_brand_bool': 'int8',
         'prop_country_id': 'int8',
-        'prop_id': 'int8',
+        'prop_id': 'int64',
         'prop_location_score1': 'float16',
         'prop_location_score2': 'float16',
         'prop_log_historical_price': 'float16',
@@ -68,9 +68,9 @@ def read_data(filename, chunked):
         chunked = 300000
 
     if chunked:
-        return pd.read_csv(filename, dtype=DTYPE_DICT, chunksize=chunked)
+        return pd.read_csv(filename, dtype=DTYPE_DICT, chunksize=chunked,sep = ',')
     else:
-        return pd.read_csv(filename, dtype=DTYPE_DICT)
+        return pd.read_csv(filename, dtype=DTYPE_DICT,sep = ',')
 
 
 def read_training_data(chunked=None):
@@ -102,17 +102,10 @@ def save_data(df, type = 1,chunked = True):
     save data into csv file
     type = 1: training data 
     type = 0: test data
-    tfr is short for text file reader
+    If for the chunked data, header will not be written
     """
-    if chunked:
-        mode_type = 'a+'
-    else:
-        mode_type = 'w'
 
-    if type == 1:
-        df.to_csv(PROCESSED_TRAIN,sep='\t',mode = mode_type)
-    else:
-        df.to_csv(PROCESSED_TEST,sep='\t',mode = mode_type)
+    df.to_csv(PROCESSED_TRAIN if type == 1 else PROCESSED_TEST,sep=',',mode = 'a+' if chunked else 'w',index = False,header = False if chunked else True)
 
 
 def save_sampled_data(object):
