@@ -16,9 +16,6 @@ def preprocessing_1(df,type = 1):
     No return values since all operation is done in place
     """
 
-    # Remove srch_id and date_time
-    df.drop(['srch_id','date_time'],axis = 1, inplace = True)
-
     # treatment for missing values
     df.orig_destination_distance.fillna(-10,inplace = True)
 
@@ -36,6 +33,8 @@ def preprocessing_1(df,type = 1):
 
     # Remove all categorical attribute
     to_delete = [
+        'date_time',
+        'site_id',
         'visitor_location_country_id',
         'visitor_hist_adr_usd',
         'prop_country_id',
@@ -53,7 +52,7 @@ def preprocessing_1(df,type = 1):
 
     #This goes for the training data
     if type == 1:
-        to_delete.extend(['position','gross_bookings_usd'])
+        to_delete.extend(['srch_id','position','gross_bookings_usd'])
 
     df.drop(to_delete, axis = 1, inplace = True)
 
@@ -82,8 +81,9 @@ def preprocessing_2(df,type = 1):
     No return values since all operation is done in place
     """
 
-    # Remove srch_id and date_time
-    df.drop(['srch_id','date_time'],axis = 1, inplace = True)
+    # Remove date_time
+    df.drop('date_time',axis = 1, inplace = True)
+
 
     # treatment for missing values
     df.orig_destination_distance.fillna(-10,inplace = True)
@@ -111,14 +111,14 @@ def preprocessing_2(df,type = 1):
 
     #This only goes for training data
     if type == 1:
-        df.drop(['position','gross_bookings_usd'], axis = 1, inplace = True)
+        df.drop(['srch_id','position','gross_bookings_usd'], axis = 1, inplace = True)
 
     print "The preprocessing task is done."
 
 # Add average numeric attributes to the training and test data
 # Average is based on training and test data at the same time
 # def add_numeric_per_propid(df,avg_propId_train,avg_propId_test){
-    
+#     trainingData = read_
 # }
 
 
