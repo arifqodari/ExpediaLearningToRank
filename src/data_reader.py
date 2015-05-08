@@ -43,7 +43,7 @@ def read_data(filename, chunked):
         'promotion_flag': 'int8',
         'prop_brand_bool': 'int8',
         'prop_country_id': 'int8',
-        'prop_id': 'int64',
+        'prop_id': 'int8',
         'prop_location_score1': 'float16',
         'prop_location_score2': 'float16',
         'prop_log_historical_price': 'float16',
@@ -55,7 +55,7 @@ def read_data(filename, chunked):
         'srch_booking_window': 'int16',
         'srch_children_count': 'int16',
         'srch_destination_id': 'int8',
-        'srch_id': 'int64',
+        'srch_id': 'int',
         'srch_length_of_stay': 'int16',
         'srch_query_affinity_score': 'float16',
         'srch_room_count': 'int16',
@@ -97,19 +97,32 @@ def read_test_data(chunked = None):
     return read_data(TEST_DATA, chunked)
 
 
-def save_data(tfr, type = 1):
+def save_data(df, type = 1,chunked = True):
     """
-    save data into file
+    save data into csv file
     type = 1: training data 
     type = 0: test data
     tfr is short for text file reader
     """
-    if type == 1:
-        output = open(PROCESSED_TRAIN,'w')
+    if chunked:
+        mode_type = 'a+'
     else:
-        output = open(PROCESSED_TEST,'w')
+        mode_type = 'w'
 
-    pickle.dump(tfr,output)
+    if type == 1:
+        df.to_csv(PROCESSED_TRAIN,sep='\t',mode = mode_type)
+    else:
+        df.to_csv(PROCESSED_TEST,sep='\t',mode = mode_type)
+
+
+def save_sampled_data(object):
+    """
+    Save Sampled Training Data into file.
+    """
+
+    output = open(SAMPLED_TRAIN,'w')
+    pickle.dump(object,output)
+    output.close()
 
 
 def save_model(clf):
