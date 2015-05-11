@@ -13,14 +13,65 @@ def read_data(filename, chunked):
     However, for some data preprocessing, no chunk will be easier.
     chunked = False, to disable chunking data
     """
-
+    DTYPE_DICT = {
+        'comp1_inv': 'float16',
+        'comp1_rate': 'float16',
+        'comp1_rate_percent_diff': 'float16',
+        'comp2_inv': 'float16',
+        'comp2_rate': 'float16',
+        'comp2_rate_percent_diff': 'float16',
+        'comp3_inv': 'float16',
+        'comp3_rate': 'float16',
+        'comp3_rate_percent_diff': 'float16',
+        'comp4_inv': 'float16',
+        'comp4_rate': 'float16',
+        'comp4_rate_percent_diff': 'float16',
+        'comp5_inv': 'float16',
+        'comp5_rate': 'float16',
+        'comp5_rate_percent_diff': 'float16',
+        'comp6_inv': 'float16',
+        'comp6_rate': 'float16',
+        'comp6_rate_percent_diff': 'float16',
+        'comp7_inv': 'float16',
+        'comp7_rate': 'float16',
+        'comp7_rate_percent_diff': 'float16',
+        'comp8_inv': 'float16',
+        'comp8_rate': 'float16',
+        'comp8_rate_percent_diff': 'float16',
+        'date_time': 'str',
+        'orig_destination_distance': 'float16',
+        'price_usd': 'float16',
+        'promotion_flag': 'int8',
+        'prop_brand_bool': 'int8',
+        'prop_country_id': 'int8',
+        'prop_id': 'int64',
+        'prop_location_score1': 'float16',
+        'prop_location_score2': 'float16',
+        'prop_log_historical_price': 'float16',
+        'prop_review_score': 'float16',
+        'prop_starrating': 'float16',
+        'random_bool': 'int8',
+        'site_id': 'int8',
+        'srch_adults_count': 'int16',
+        'srch_booking_window': 'int16',
+        'srch_children_count': 'int16',
+        'srch_destination_id': 'int8',
+        'srch_id': 'int',
+        'srch_length_of_stay': 'int16',
+        'srch_query_affinity_score': 'float16',
+        'srch_room_count': 'int16',
+        'srch_saturday_night_bool': 'int8',
+        'visitor_hist_adr_usd': 'float16',
+        'visitor_hist_starrating': 'float16',
+        'visitor_location_country_id': 'int8'
+        }
     if chunked is None:
         chunked = 300000
 
     if chunked:
-        return pd.read_csv(filename, dtype=object, chunksize=chunked)
+        return pd.read_csv(filename, dtype=DTYPE_DICT, chunksize=chunked,sep = ',')
     else:
-        return pd.read_csv(filename, dtype=object)
+        return pd.read_csv(filename, dtype=DTYPE_DICT,sep = ',')
 
 
 def read_training_data(chunked=None):
@@ -47,19 +98,25 @@ def read_test_data(chunked = None):
     return read_data(TEST_DATA, chunked)
 
 
-def save_data(tfr, type = 1):
+def save_data(df, type = 1,chunked = True):
     """
-    save data into file
+    save data into csv file
     type = 1: training data 
     type = 0: test data
-    tfr is short for text file reader
+    If for the chunked data, header will not be written
     """
-    if type == 1:
-        output = open(PROCESSED_TRAIN,'w')
-    else:
-        output = open(PROCESSED_TEST,'w')
 
-    pickle.dump(tfr,output)
+    df.to_csv(PROCESSED_TRAIN if type == 1 else PROCESSED_TEST,sep=',',mode = 'a+' if chunked else 'w',index = False,header = False if chunked else True)
+
+
+def save_sampled_data(object):
+    """
+    Save Sampled Training Data into file.
+    """
+
+    output = open(SAMPLED_TRAIN,'w')
+    pickle.dump(object,output)
+    output.close()
 
 
 def save_model(clf, model_filename):
