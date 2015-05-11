@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import cPickle as pickle
+import os.path
 
 from setting import *
 
@@ -61,19 +62,40 @@ def save_data(tfr, type = 1):
     pickle.dump(tfr,output)
 
 
-def save_model(clf):
+def save_model(clf, model_filename):
     """
     save classifier to file
     """
 
-    output = open(MODEL_FILENAME, 'w')
+    output = open(folder+model_filename+'.pickle', 'w')
     pickle.dump(clf, output)
 
 
-def load_model():
+def load_model(model_filename):
     """
     load classifier from file
     """
 
-    inp = open(MODEL_FILENAME, 'r')
+    inp = open(folder+model_filename+'.pickle', 'r')
     return pickle.load(inp)
+
+
+def save_var(var, var_name):
+    """
+    save variable
+    """
+
+    output = open(folder+var_name+'.pickle', 'w')
+    pickle.dump(var, output)
+
+
+def load_var(var_name):
+    """
+    load variable
+    """
+
+    inp = open(folder+var_name+'.pickle', 'r')
+    return pickle.load(inp)
+
+def is_file_exist(var_name):
+    return os.path.isfile(folder+var_name+'.pickle')

@@ -12,3 +12,5 @@ MODEL_FILENAME = folder + 'model.pickle'
 # Specify precess data name
 PROCESSED_TRAIN = folder +'processed_training_data'
 PROCESSED_TEST = folder +'proccessed_test'
+
+DF_PREFIX = 'df_'
