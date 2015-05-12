@@ -7,7 +7,7 @@ from data_reader import *
 from sklearn.ensemble import *
 
 
-def rf_train(X_train, y_train, n_trees=50,n_jobs=1,min_samples_split=10):
+def rf_train(X_train, y_train, n_trees=50,n_jobs=1,max_depth=100):
     """
     train using Random Forest classifier
     """
@@ -15,14 +15,14 @@ def rf_train(X_train, y_train, n_trees=50,n_jobs=1,min_samples_split=10):
     rf0 = RandomForestClassifier(n_estimators=n_trees,
             verbose=2,
             n_jobs=n_jobs,
-            min_samples_split=min_samples_split,
+	    max_depth=max_depth,
             class_weight='auto',
             random_state=1)
 
     rf1 = RandomForestClassifier(n_estimators=n_trees,
             verbose=2,
             n_jobs=n_jobs,
-            min_samples_split=min_samples_split,
+	    max_depth=max_depth,
             class_weight='auto',
             random_state=1)
 

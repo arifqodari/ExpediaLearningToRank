@@ -65,8 +65,8 @@ def pointwise_sampling():
     val = np.vstack(arr_val)
     train = np.vstack(arr_train)
 
-    save_var(train, 'train')
-    save_var(val, 'val')
+    np.save('../data/train', train)
+    np.save('../data/val', val)
     save_var(rel_val, 'rel_val')
     save_var(columns, 'columns')
 
