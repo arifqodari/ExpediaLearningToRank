@@ -15,12 +15,13 @@ from sklearn.ensemble import *
 
 
 if __name__ == "__main__":
-    X_train, y_train, X_val, y_val, rel_val = pointwise_sampling()
-    # X_train, y_train, X_val, y_val, rel_val = load_var('xy')
-    rf0, rf1 = rf_train(X_train, y_train, n_jobs=2)
-    pred = rf_predict(X_val, y_val, rf0, rf1)
-    # pred = rf_predict(X_val, y_val)
+    train, val, rel_val, columns= pointwise_sampling()
 
-    pred = load_var('rel_pred')
+    X_val, y_val = pointwise_preprocessing(val, columns)
+    X_train, y_train = pointwise_preprocessing(train, columns)
+
+    rf0, rf1 = rf_train(X_train, y_train, n_trees=100, n_jobs=2)
+    pred = rf_predict(X_val, y_val, rf0, rf1)
+
     ndcg = eval_ndcg(pred, rel_val)
     print ndcg
