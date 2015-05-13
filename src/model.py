@@ -5,6 +5,8 @@ import cPickle as pickle
 from setting import *
 from data_reader import *
 from sklearn.ensemble import *
+from sklearn.gaussian_process import GaussianProcess
+from sklearn import svm
 
 
 def rf_train(X_train, y_train, n_trees=50,n_jobs=1,max_depth=100):
@@ -67,5 +69,39 @@ def rf_predict(X_val, y_val, rf0=None, rf1=None):
     rel_pred[rel_pred[:,0] == 2,0] = 5
 
     save_var(rel_pred, 'rel_pred')
+
+    return rel_pred
+
+
+def rfr_train(X_train, y_train, n_trees=50,n_jobs=1,max_depth=None):
+    """
+    train using Random Forest regressor
+    """
+
+    rfr = RandomForestRegressor(n_estimators=n_trees,
+            verbose=2,
+            n_jobs=n_jobs,
+	    max_depth=max_depth,
+            random_state=1)
+
+    print 'Training RF0 ...'
+    rfr.fit(X_train, y_train)
+    save_model(rfr, 'rfr')
+
+    return rfr
+
+
+def rfr_predict(X_val, y_val, rfr=None):
+    """
+    predict validation data set
+    """
+
+    print 'Predicting ...'
+
+    if rfr is None:
+        rfr = load_model('rfr')
+
+    rel_pred = rfr.predict(X_val)
+    save_var(rel_pred, 'rel_pred_reg')
 
     return rel_pred
