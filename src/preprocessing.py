@@ -27,9 +27,9 @@ def preprocessing_1(df,type = 1):
     df.prop_review_score.fillna(-10, inplace = True)
 
     # Replace a value less than the minimum of training + test data
-    df.srch_query_affinity_score.fillna(-350, inplace = True)
+    df.srch_query_affinity_score.fillna(-10, inplace = True)
 
-    df.prop_location_score2.fillna(0, inplace = True)
+    df.prop_location_score2.fillna(-10, inplace = True)
 
     # Remove all categorical attribute
     to_delete = [
@@ -52,7 +52,7 @@ def preprocessing_1(df,type = 1):
 
     #This goes for the training data
     if type == 1:
-        to_delete.extend(['srch_id','position','gross_bookings_usd'])
+        to_delete.extend(['position','gross_bookings_usd'])
 
     df.drop(to_delete, axis = 1, inplace = True)
 
@@ -122,8 +122,42 @@ def preprocessing_2(df,type = 1):
 # }
 
 
+def preprocessing_3(df, type = 1):
+    """
+    Preprocessing data
+    Here we only drop features and transform NULL values
+    After preprocessing:
+        training data (type = 1): contains only training and target
+        test data (type  = 0): contains only training
+    No return values since all operation is done in place
+    """
+    to_delete = [
+        'date_time',
+        'site_id',
+        'visitor_location_country_id',
+        #'visitor_hist_adr_usd',
+        'prop_country_id',
+        #'prop_id',
+        #'prop_brand_bool',
+        #'promotion_flag',
+        'srch_destination_id',
+        #'random_bool',
+    ]
 
+    for i in range(1,9):
+        rate = 'comp' + str(i) + '_rate'
+        inv = 'comp' + str(i) + '_inv'
+        #diff = 'comp' + str(i) + '_rate_percent_diff'
+        to_delete.extend([rate,inv])
 
+    #This goes for the training data
+    if type == 1:
+        to_delete.extend(['position','gross_bookings_usd'])
+
+    df.drop(to_delete, axis = 1, inplace = True)
+    df.fillna(-10, inplace = True)
+
+    print "The preprocessing task is done."
 
 
 
