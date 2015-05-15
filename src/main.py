@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import cPickle as pickle
+import sys
 
 from setting import *
 from data_reader import *
@@ -14,18 +15,23 @@ from sklearn.ensemble import *
 
 
 if __name__ == "__main__":
-    train_reader = read_training_data()
-    test_reader = read_test_data()
+    # train, val, rel_val, columns= pointwise_sampling()
 
-    df_train = train_reader.get_chunk(1000)
-    df_test = test_reader.get_chunk(1000)
+    train = np.load('../data/train.npy')
+    val = np.load('../data/val.npy')
 
-    preprocessing(df_train)
+    rel_val = load_var('rel_val')
+    columns = load_var('columns')
 
-    clf = RandomForestClassifier(n_estimators=50,
-            verbose=2,
-            n_jobs=2,
-            min_samples_split=10,
-            random_state=1)
-    #clf.fit(X_train, y_train)
+    X_val, y_val = pointwise_preprocessing(val, columns)
+    X_train, y_train = pointwise_preprocessing(train, columns)
 
+    # rf0, rf1 = rf_train(X_train, y_train, n_trees=200, n_jobs=-1)
+    # pred = rf_predict(X_val, y_val, rf0, rf1)
+    # ndcg = eval_ndcg(pred, rel_val)
+
+    # rfr = rfr_train(X_train, y_train, n_trees=200, n_jobs=-1, max_depth=50)
+    # pred = rfr_predict(X_val, y_val)
+    # ndcg = eval_ndcg_reg(pred, rel_val)
+
+    print ndcg
