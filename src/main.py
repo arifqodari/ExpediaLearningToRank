@@ -30,11 +30,11 @@ if __name__ == "__main__":
     X_val, y_val = pointwise_preprocessing(val, columns)
     del train, val, columns
 
-    # rf0, rf1 = rf_train(X_train, y_train, n_trees=500, n_jobs=-1)
-    # pred = rf_predict(X_val, y_val)
+    # rf0, rf1 = rf_train(X_train, y_train, n_trees=100, n_jobs=-1, max_depth=10)
+    # pred = rf_predict(X_val, y_val, rf0, rf1)
     # ndcg = eval_ndcg(pred, rel_val)
 
-    rfr = rfr_train(X_train, y_train, n_trees=100, n_jobs=-1, max_depth=10)
+    rfr = rfr_train(X_train, y_train, n_trees=400, n_jobs=-1, max_depth=10)
     pred = rfr_predict(X_val, rfr)
     ndcg = eval_ndcg_reg(pred, rel_val)
 

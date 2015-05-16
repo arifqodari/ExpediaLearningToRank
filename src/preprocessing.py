@@ -295,6 +295,9 @@ def pointwise_preprocessing(df, columns, test=False):
 
     # Replace NULL of competitiors with 0 in place
     idcs = []
+    idcs1 = []
+    idcs2 = []
+    idcs3 = []
     for i in range(1,9):
         rate = 'comp' + str(i) + '_rate'
         inv = 'comp' + str(i) + '_inv'
@@ -309,14 +312,21 @@ def pointwise_preprocessing(df, columns, test=False):
         df[(df[:,idx3] == np.nan) | (df[:,idx3] == 'NULL') | (df[:,idx3] == '') | (df[:,idx3] == 'nan'),idx3] = 0
 
         idcs += [idx1, idx2, idx3]
+        idcs1.append(idx1)
+        idcs2.append(idx2)
+        idcs3.append(idx3)
 
     # average over competitor data
-    new_attribute = np.mean(df[:,idcs].astype(float), axis=1)
-    df = np.column_stack((df, new_attribute))
+    new_attribute1 = np.mean(df[:,idcs1].astype(float), axis=1)
+    new_attribute2 = np.mean(df[:,idcs2].astype(float), axis=1)
+    new_attribute3 = np.mean(df[:,idcs3].astype(float), axis=1)
+    df = np.column_stack((df, new_attribute1))
+    df = np.column_stack((df, new_attribute2))
+    df = np.column_stack((df, new_attribute3))
 
     df[(df == np.nan) | (df == 'NULL') | (df == '') | (df == 'nan')] = -10
 
-    idcs += [columns['site_id'], columns['visitor_location_country_id'], columns['prop_id']]
+    idcs += [columns['site_id'], columns['visitor_location_country_id'], columns['prop_id'], columns['prop_country_id'], columns['srch_destination_id']]
     idcs += [columns['srch_id'], columns['date_time']]
 
     if test:
