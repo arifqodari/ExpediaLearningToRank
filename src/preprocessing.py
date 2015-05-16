@@ -247,45 +247,57 @@ def data_chunking():
         save_var(df, filename)
 
 
-def pointwise_preprocessing(df, columns):
+def pointwise_preprocessing(df, columns, test=False):
     """
     simple pre-processing
     """
 
     # # treatment for missing values
-    # idx = columns['srch_query_affinity_score']
-    # df[(df[:,idx] == 'NULL') | (df[:,idx] == '') | (df[:,idx] == 'nan'),idx] = 0
+    idx = columns['srch_query_affinity_score']
+    df[(df[:,idx] == np.nan) | (df[:,idx] == 'NULL') | (df[:,idx] == '') | (df[:,idx] == 'nan'),idx] = -350
 
     # idx = columns['prop_location_score2']
     # df[(df[:,idx] == 'NULL') | (df[:,idx] == '') | (df[:,idx] == 'nan'),idx] = 0
 
-    # # Replace NULL of competitiors with 0 in place
-    # for i in range(1,9):
-    #     rate = 'comp' + str(i) + '_rate'
-    #     inv = 'comp' + str(i) + '_inv'
-    #     diff = 'comp' + str(i) + '_rate_percent_diff'
-    #     idx1 = columns[rate]
-    #     idx2 = columns[inv]
-    #     idx3 = columns[diff]
-    #     df[(df[:,idx1] == 'NULL') | (df[:,idx1] == '') | (df[:,idx1] == 'nan'),idx1] = 0
-    #     df[(df[:,idx2] == 'NULL') | (df[:,idx2] == '') | (df[:,idx2] == 'nan'),idx2] = 0
-    #     df[(df[:,idx3] == 'NULL') | (df[:,idx3] == '') | (df[:,idx3] == 'nan'),idx3] = 0
-    #     # df[rate].astype(float).fillna(0,inplace = True)
-    #     # df[inv].astype(float).fillna(0,inplace = True)
-    #     # df[diff].astype(float).fillna(0,inplace = True)
+    # Replace NULL of competitiors with 0 in place
+    idcs = []
+    for i in range(1,9):
+        rate = 'comp' + str(i) + '_rate'
+        inv = 'comp' + str(i) + '_inv'
+        diff = 'comp' + str(i) + '_rate_percent_diff'
 
-    df[(df == 'NULL') | (df == '') | (df == 'nan')] = -10
+        idx1 = columns[rate]
+        idx2 = columns[inv]
+        idx3 = columns[diff]
 
-    idcs = [columns['srch_id'],
-    columns['date_time'],
-    columns['position'],
-    columns['click_bool'],
-    columns['gross_bookings_usd'],
-    columns['booking_bool']]
+        df[(df[:,idx1] == np.nan) | (df[:,idx1] == 'NULL') | (df[:,idx1] == '') | (df[:,idx1] == 'nan'),idx1] = 0
+        df[(df[:,idx2] == np.nan) | (df[:,idx2] == 'NULL') | (df[:,idx2] == '') | (df[:,idx2] == 'nan'),idx2] = 0
+        df[(df[:,idx3] == np.nan) | (df[:,idx3] == 'NULL') | (df[:,idx3] == '') | (df[:,idx3] == 'nan'),idx3] = 0
 
-    # create features matrix and target array
-    X = np.delete(df,idcs,axis=1).astype(float)
-    # y = pointwise_label(df[:,[columns['click_bool'],columns['booking_bool']]].astype(int))
-    y = pointwise_relevance(df[:,[columns['click_bool'],columns['booking_bool']]].astype(int))
+        idcs += [idx1, idx2, idx3]
 
-    return X, y
+    # average over competitor data
+    new_attribute = np.mean(df[:,idcs].astype(float), axis=1)
+    df = np.column_stack((df, new_attribute))
+
+    df[(df == np.nan) | (df == 'NULL') | (df == '') | (df == 'nan')] = -10
+
+    idcs += [columns['site_id'], columns['visitor_location_country_id'], columns['prop_id']]
+    idcs += [columns['srch_id'], columns['date_time']]
+
+    if test:
+        X = np.delete(df,idcs,axis=1).astype(float)
+        return X.astype(float)
+    else:
+        idcs += [
+        columns['position'],
+        columns['click_bool'],
+        columns['gross_bookings_usd'],
+        columns['booking_bool']]
+
+        # create features matrix and target array
+        X = np.delete(df,idcs,axis=1).astype(float)
+        # y = pointwise_label(df[:,[columns['click_bool'],columns['booking_bool']]].astype(int))
+        y = pointwise_relevance(df[:,[columns['click_bool'],columns['booking_bool']]].astype(int))
+
+        return X, y
