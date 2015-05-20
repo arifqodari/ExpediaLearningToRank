@@ -10,7 +10,7 @@ from rankpy.queries import Queries
 from rankpy.models import LambdaMART
 from rankpy.metrics import NormalizedDiscountedCumulativeGain
 import os
-
+import time
 
 # In[3]:
 
@@ -41,13 +41,6 @@ def dcg(rel):
     denominator = np.log2(np.arange(2,len(rel)+2))
     return (numerator/denominator).sum()
 
-
-# In[14]:
-
-import time
-
-
-# In[15]:
 
 start_time = time.clock()
 score_list = [dcg(group.rel)/dcg(group.rel.sort(ascending=False,inplace=False)) for name,group in documents.groupby('srch_id')]
